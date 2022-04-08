@@ -1,0 +1,8 @@
+PKG B0.kit js_of_ocaml
+S src
+S src-jsoo
+S src-os
+S test
+S test-os
+S test-jsoo
+B _build/**

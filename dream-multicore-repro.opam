@@ -1,0 +1,37 @@
+opam-version: "2.0"
+synopsis:"Segfault with large response strings"
+description:""
+maintainer: ["patrick@sirref.org"]
+authors: ["Patrick Ferris"]
+license: "MIT"
+homepage: "https://github.com/patricoferris/dream-multicore-repro"
+bug-reports: "https://github.com/patricoferris/dream-multicore-repro/issues"
+depends: [
+  "dune" {>= "2.9"}
+  "dream" {>= "1.0.0~alpha4"}
+# Monorepo was installing a different pplxib   
+  "ppxlib" {= "0.25.0~5.00preview"}
+  "sexplib0" {= "v0.14.1~alpha-repo"}
+]
+build: [
+  ["dune" "subst"] {dev}
+  [
+    "dune"
+    "build"
+    "-p"
+    name
+    "-j"
+    jobs
+    "--promote-install-files=false"
+    "@install"
+    "@runtest" {with-test}
+    "@doc" {with-doc}
+  ]
+  ["dune" "install" "-p" name "--create-install-files" name]
+]
+dev-repo: "git+https://github.com/patricoferris/dream-multicore-repro.git"
+pin-depends: [
+    "fmt.dev" "git+https://github.com/patricoferris/fmt#55e284338acb17c33653b89a5dcf55ed9c273216"
+    "uutf.dev" "git+https://github.com/patricoferris/uutf#b70b185bb59928d4d1e7800c019c279cee908807"
+    "ptime.dev" "git+https://github.com/patricoferris/ptime#2af4df988dad29e955f82c868c3539ca1d5fcda7"
+]

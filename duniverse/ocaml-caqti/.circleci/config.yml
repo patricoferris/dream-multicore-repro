@@ -1,0 +1,51 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: ocaml/opam:debian-ocaml-4.13
+        environment:
+          TERM: xterm
+      - image: circleci/postgres:alpine-ram
+        environment:
+          POSTGRES_USER: test
+          POSTGRES_DB: test
+          POSTGRES_PASSWORD: ""
+
+    steps:
+      - checkout
+      - run:
+          name: Update apt-get
+          command: sudo apt-get update
+      - run:
+          name: Update opam package list
+          # This Docker image defaults to coming with its own opam repo built
+          # in, but we want to actually update with the real upstream opam
+          command: |
+            opam remote remove --all default
+            opam remote add default https://opam.ocaml.org
+      - run:
+          name: Pin packages
+          command: |
+            version=`egrep '^## v[0-9]' CHANGES.md | head -1 | sed 's/^## v\(.*\) - .*/\1/'`
+            for f in *.opam; do
+              opam pin add -yn "${f%.opam}.${version}" .
+            done
+      - run:
+          name: Install system dependencies
+          command: |
+            opam depext -ty $(ls -1 *.opam | sed -e 's/\.opam$//')
+            sudo apt-get install -y libmariadb-dev
+      - run:
+          name: Install OCaml dependencies
+          command: opam install --deps-only -ty $(ls -1 *.opam | sed -e 's/\.opam$//')
+      - run:
+          name: Build
+          command: opam config exec -- dune build @install
+      - run:
+          name: Test
+          command: |
+            echo "
+                sqlite3:test.db?busy_timeout=60000
+                postgresql://test@localhost/test
+            " > testsuite/uris.conf
+            opam config exec -- dune runtest
