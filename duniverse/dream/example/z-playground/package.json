@@ -1,0 +1,9 @@
+{
+  "name": "dream-playground",
+  "dependencies": {
+    "codemirror": "*"
+  },
+  "scripts": {
+    "start": "npm run bundle && opam exec -- dune exec server/playground.exe"
+  }
+}

@@ -31,6 +31,8 @@ build: [
 ]
 dev-repo: "git+https://github.com/patricoferris/dream-multicore-repro.git"
 pin-depends: [
+    "dream.dev" "git+https://github.com/patricoferris/dream#629c2edcb477a0685f877d4745baee414e24edd1"
+    "dream-httpaf.dev" "git+https://github.com/patricoferris/dream#629c2edcb477a0685f877d4745baee414e24edd1"
     "fmt.dev" "git+https://github.com/patricoferris/fmt#55e284338acb17c33653b89a5dcf55ed9c273216"
     "uutf.dev" "git+https://github.com/patricoferris/uutf#b70b185bb59928d4d1e7800c019c279cee908807"
     "ptime.dev" "git+https://github.com/patricoferris/ptime#2af4df988dad29e955f82c868c3539ca1d5fcda7"
